@@ -4,6 +4,7 @@ from pathlib import Path
 parent_dir = str(Path(__file__).parent.parent)
 sys.path.append(parent_dir)
 
+import pytz
 
 import zipfile
 
@@ -215,9 +216,18 @@ def load_shape_data_file(
 
 # st.set_page_config(layout="wide")
 
-current_date = pd.Timestamp.now(tz="Etc/UTC")
+
+
+#current_date = pd.Timestamp.now(tz="Etc/UTC")
+#st.title(f"New York Yellow Taxi Cab Demand Next Hour")
+#st.header(f'{current_date.strftime("%Y-%m-%d %H:%M:%S")}')
+
+# Convert UTC to New York Time (EST/EDT)
+nyc_tz = pytz.timezone("America/New_York")
+current_date = pd.Timestamp.now(tz="UTC").tz_convert(nyc_tz)
+
 st.title(f"New York Yellow Taxi Cab Demand Next Hour")
-st.header(f'{current_date.strftime("%Y-%m-%d %H:%M:%S")}')
+st.header(f'{current_date.strftime("%Y-%m-%d %H:%M:%S %Z")}')  # Added timezone
 
 progress_bar = st.sidebar.header("Working Progress")
 progress_bar = st.sidebar.progress(0)
